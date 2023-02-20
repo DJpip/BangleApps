@@ -1,0 +1,13 @@
+{ "id": "coffee",
+  "name": "Coffee Clock",
+  "shortName":"Coffee Clock",
+  "icon": "app.png",
+  "version":"0.01",
+  "description": "An imprecise word clock for the coffee lover",
+  "tags": "",
+  "storage": [
+    {"name":"coffee.app.js","url":"app.js"},
+    {"name":"coffee.img","url":"app-icon.js","evaluate":true}
+    {}
+  ]
+}
