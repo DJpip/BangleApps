@@ -5,7 +5,7 @@
   "icon": "app-icon.js",
   "version":"0.01",
   "description": "An imprecise word clock for the coffee lover",
-  "tags": "",
+  "tags": "clock",
   "storage": [
     {"name":"coffee.app.js","url":"coffee.app.js"},
     {"name":"coffee.img","url":"coffee.img"}
