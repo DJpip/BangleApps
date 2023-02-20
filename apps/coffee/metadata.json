@@ -1,17 +1,17 @@
 { "id": "coffee",
   "name": "Coffee Clock",
   "shortName":"Coffee Clock",
-  //"type": "clock",
-  //"src": "coffee.app.js",
+  "type": "clock",
+  "src": "coffee.app.js",
   "icon": "app-icon.js",
   "version":"0.01",
   "description": "An imprecise word clock for the coffee lover",
   "tags": "",
-  //"supports": ["BANGLEJS2"],
+  "supports": ["BANGLEJS2"],
   "storage": [
     {"name":"coffee.app.js","url":"app.js"},
     {"name":"coffee.img","url":"coffee.img","evaluate":true},
-    //{"name":"timerclk.lib.js", "url":"timerclk.lib.js"},
-    //{"name":"timerclk.json", "url":"timerclk.json"}
+    {"name":"timerclk.lib.js", "url":"timerclk.lib.js"},
+    {"name":"timerclk.json", "url":"timerclk.json"}
   ]
 }
