@@ -11,7 +11,7 @@
   "storage": [
     {"name":"coffee.app.js","url":"app.js"},
     {"name":"coffee.img","url":"coffee.img","evaluate":true},
-    {"name":"timerclk.lib.js", "url":"timerclk.lib.js},
+    {"name":"timerclk.lib.js", "url":"timerclk.lib.js"},
     {"name":"timerclk.json", "url":"timerclk.json"}
   ]
 }
