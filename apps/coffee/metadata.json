@@ -4,6 +4,7 @@
   "type": "clock",
   "icon": "app.png",
   "version":"0.01",
+  "readme": "README.md",
   "supports": ["BANGLEJS2"],
   "description": "An imprecise word clock for the coffee lover",
   "tags": "clock",
