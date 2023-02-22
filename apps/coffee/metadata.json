@@ -2,12 +2,13 @@
   "name": "Coffee Clock",
   "shortName":"Coffee Clock",
   "type": "clock",
-  "icon": "app-icon.js",
+  "icon": "coffee.img",
   "version":"0.01",
+  "supports": ["BANGLEJS2"],
   "description": "An imprecise word clock for the coffee lover",
   "tags": "clock",
   "storage": [
     {"name":"coffee.app.js","url":"coffee.app.js"},
-    {"name":"coffee.img","url":"coffee.img"}
+    {"name":"coffee.img","url":"app-icon.js","evaluate":true}
      ]
 }
