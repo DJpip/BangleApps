@@ -1,4 +1,10 @@
-E.showMessage("My\nSimple\nApp","My App")
+getTime();
+setInterval(getTime,1E4);
+
+Bangle.loadWidgets();
+Bangle.drawWidgets();
+
+
 
 const lessonTimes = {
   0:  [8,20,30]
@@ -13,11 +19,35 @@ const lessonTimes = {
   9:  [15,40,50]
 };
 
-
-function getTime(){
-  // get time
+//time variables. Declare and set on load.
+  var Period = 0;
+  
   var t = new.Date();
   var d = t.getDay();
   var h = t.getHours();
   var m = t.getMinutes();
-  var time = ("0" + h).substr(-2) + ":" + ("0" + m).substr(-2);
+  var isWeekend;
+  var time;
+
+
+function getTime(){
+  
+  t = new.Date();
+  h = t.getHours();
+  m = t.getMinutes();
+  time = ("0" + h).substr(-2) + ":" + ("0" + m).substr(-2);
+  if(h == 0){
+    d = t.getDay();
+    checkWeekend();
+  }
+  lessonStart();
+}
+  
+function checkWeekend(){
+  if(d > 5){
+    isWeekend = true;
+  }
+  
+function lessonStart(){
+ lessonTimes.forEach(
+} 
