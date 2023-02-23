@@ -1,8 +1,7 @@
-getTime();
-setInterval(getTime,1E4);
 
-Bangle.loadWidgets();
-Bangle.drawWidgets();
+
+//Bangle.loadWidgets();
+//Bangle.drawWidgets();
 
 
 
@@ -26,28 +25,44 @@ const lessonTimes = {
   var d = t.getDay();
   var h = t.getHours();
   var m = t.getMinutes();
+  var lastM = t.getMinutes();
   var isWeekend;
   var time;
 
 
 function getTime(){
   
-  t = new.Date();
-  h = t.getHours();
-  m = t.getMinutes();
-  time = ("0" + h).substr(-2) + ":" + ("0" + m).substr(-2);
+  t = new.Date(); 
+  h = t.getHours(); Print(h);
+  m = t.getMinutes(); Print(m);
+  time = ("0" + h).substr(-2) + ":" + ("0" + m).substr(-2); print(time);
   if(h == 0){
     d = t.getDay();
     checkWeekend();
   }
-  lessonStart();
+  if(m !== lastM){
+    lastM = m;
+    lessonStart();
 }
   
 function checkWeekend(){
   if(d > 5){
     isWeekend = true;
   }
-  
+var L =  0;
+
 function lessonStart(){
- lessonTimes.forEach(
+ lessonTimes[L][0].forEach((L)=>{
+   print(L);
+   if(lessonTimes[L][0] == h){
+     if(lessonTimes[L][1] == m){
+       Period = L;
+     }
+   }
+ });
+  print(Period);
 } 
+
+
+setInterval(getTime,1E4);
+getTime();
