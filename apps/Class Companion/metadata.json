@@ -1,0 +1,12 @@
+{ "id": "ClassCompanion",
+  "name": "Class Companion",
+  "shortName" : "ClassCompanion",
+  "icon": "app.png",
+  "description": "For the teacher",
+  "tags": "clock",
+  "type": "clock",
+  "storage": [
+    {"name":"ClassCompanion.app.js","url":"app.js"},
+    {"name":"ClassCompanion.img","url":"app-icon.js","evaluate":true}
+  ],
+},
