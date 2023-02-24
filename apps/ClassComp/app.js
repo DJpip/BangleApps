@@ -84,9 +84,10 @@ Bangle.on('midnight', function() { //updates the day on midnight
 });
 
 function checkWeekend(){
-  if(d > 5){
+  if(d == 6 || d == 0){
     isWeekend = true;
   }
+  else{ isWeekend = false;}
 }
 
 function checkDate(){
@@ -194,13 +195,13 @@ if(!waiting){ //don't buzz more than once in a minute
 }
 
 function drawPeriod(){
-  g.clearRect(5,0,100,40);
+  g.clearRect(25,0,100,30);
   g.setFont("Vector",30);
   g.setColor("#FFFF00");
   if(Period == 0){
-    g.drawString("Break",5,2);
+    //g.drawString("Break",25,0);
   }
-  else {g.drawString(day + " P" + Period,5,2);}
+  else {g.drawString(day + " P" + Period,25,0);}
 }
 
 function drawSeconds(x,y,h,w){
@@ -226,6 +227,10 @@ function drawDate(x,y,h,w){
   g.drawString( date + "/" + month,x,y);
 }
 
-setInterval(getTime,1000);
+Bangle.setUI("clock");
+Bangle.loadWidgets();
+Bangle.drawWidgets();
+
+setInterval(getTime,f1);
 setInterval(timelyUpdates,f2);
 getTime(); timelyUpdates();
