@@ -62,7 +62,7 @@ if(loadRun ==true){ //run once
     checkDate(); drawDate(5,85,25,70);//checks date and draws it. checks for weekends too.
     LTInt(lessonTimes); //converts lessonTimes to useable minute array
     lessonUpdate(); //checks if lesson has changed, and if it needs to buzz
-    drawPeriod(); //draws the period top left
+    Bangle.drawWidgets(); drawPeriod(); //draws the period top left
     drawTime();
   }
   
@@ -195,6 +195,7 @@ if(!waiting){ //don't buzz more than once in a minute
 }
 
 function drawPeriod(){
+  Bangle.drawWidgets();
   g.clearRect(25,0,100,30);
   g.setFont("Vector",30);
   g.setColor("#FFFF00");
@@ -229,7 +230,7 @@ function drawDate(x,y,h,w){
 
 Bangle.setUI("clock");
 Bangle.loadWidgets();
-Bangle.drawWidgets();
+Bangle.drawWidgets(); drawPeriod();
 
 setInterval(getTime,f1);
 setInterval(timelyUpdates,f2);
