@@ -231,6 +231,7 @@ function drawDate(x,y,h,w){
 Bangle.setUI("clock");
 Bangle.loadWidgets();
 Bangle.drawWidgets(); drawPeriod();
+Bangle.on('lock', function(on) { drawPeriod();});
 
 setInterval(getTime,f1);
 setInterval(timelyUpdates,f2);
