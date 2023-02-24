@@ -282,4 +282,4 @@ var absY, lastX, lastY;
     drawWordClock();
   }
 }
-)*/;
+)*/
