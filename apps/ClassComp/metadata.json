@@ -2,6 +2,7 @@
   "name": "Class Companion",
   "shortName" : "CC",
   "icon": "app.png",
+  "version": "0.01",
   "description": "A watch for the teacher",
   "tags": "clock",
   "type": "clock",
