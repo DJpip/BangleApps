@@ -42,6 +42,7 @@ const days = [
   var loadRun = true;
   var maxLessons = lessonTimes.length;
   var waiting = false;
+  var counter = 0;
 
 //TimeInt is array of [start time as int, end time as int, mid time as int, 3/4 //time as int, 5 mins remaining as int]
 
@@ -139,53 +140,38 @@ function checkPeriod(){
   print(Period);
 }
 
+function buzzRepeat(x,y,z){ //buzz x number of times, for y long with z millis of interval. 
+  n = 0;
+  var b = setInterval(function(){
+   Bangle.buzz(y);
+   n++;
+   if(n>x-1){clearInterval(b); n=0;}
+  },z);
+}
+
 function checkbuzz(){
 if(!waiting){ //don't buzz more than once in a minute
   
 
   if(timeInt[Period][2] == timeM){ //half way through lesson
-   Bangle.buzz(200).then(()=>{
-  return new Promise(resolve=>setTimeout(resolve,300)); // wait 300ms
-    }).then(()=>{
-        return Bangle.buzz(800);
-          });
-    waiting = true;
+   buzzRepeat(2,100,700);
+       waiting = true;
     setTimeout(function(){
       waiting = false;
     },60001);
    }
   
   if(timeInt[Period][3] == timeM){ //15 mins remaining
-   Bangle.buzz(200).then(()=>{
-      return new Promise(resolve=>setTimeout(resolve,200)); // wait 300ms
-    }).then(()=>{
-        return Bangle.buzz(200);
-          }).then(()=>{
-              return new Promise(resolve=>setTimeout(resolve,200)); // wait 300ms
-              }).then(()=>{
-                return Bangle.buzz(500);
-                });
-    waiting = true;
+    buzzRepeat(3,100,700);
+      waiting = true;
     setTimeout(function(){
       waiting = false;
     },60001);
    }
   
   if(timeInt[Period][4] == timeM){ //5 mins remaining
-   Bangle.buzz(100).then(()=>{
-  return new Promise(resolve=>setTimeout(resolve,100)); // wait 300ms
-    }).then(()=>{
-        return Bangle.buzz(100);
-          }).then(()=>{
-      return new Promise(resolve=>setTimeout(resolve,100)); // wait 300ms
-    }).then(()=>{
-        return Bangle.buzz(100);
-          }).then(()=>{
-      return new Promise(resolve=>setTimeout(resolve,100)); // wait 300ms
-    }).then(()=>{
-        return Bangle.buzz(500);
-          });
-    waiting = true;
+   buzzRepeat(5,100,300);
+      waiting = true;
     setTimeout(function(){
       waiting = false;
     },60001);
@@ -212,6 +198,25 @@ function drawSeconds(x,y,h,w){
   g.drawString(("0" + s).substr(-2),x,y);
   if(s==0){drawTime();}
 }
+
+function drawCounter(x,y,h,w){
+  g.clearRect(x,y,x+w,y+h);
+  if(counter>0){
+    g.setColor("#FF8F8F");//off red
+    g.setFont("Vector",h);
+    g.drawString(counter,x,y);
+  }
+}
+
+Bangle.on('tap',function(data){
+  if(data.dir == "front"){
+    counter ++;
+    if(data.double == true){
+     counter = 0;
+     }
+  }
+    drawCounter(110,126,50,66);
+});
 
 function drawTime(){
   g.clearRect(0,31,240,85);
