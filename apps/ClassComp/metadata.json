@@ -10,5 +10,5 @@
   "storage": [
     {"name":"ClassCo.app.js","url":"app.js"},
     {"name":"ClassCo.img","url":"app-icon.js","evaluate":true}
-  ],
-},
+  ]
+}
