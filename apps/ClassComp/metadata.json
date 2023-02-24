@@ -1,0 +1,12 @@
+{ "id": "ClassComp",
+  "name": "Class Companion",
+  "shortName" : "CC",
+  "icon": "app.png",
+  "description": "A watch for the teacher",
+  "tags": "clock",
+  "type": "clock",
+  "storage": [
+    {"name":"ClassComp.app.js","url":"app.js"},
+    {"name":"ClassComp.img","url":"app-icon.js","evaluate":true}
+  ],
+},
