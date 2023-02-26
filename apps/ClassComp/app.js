@@ -222,18 +222,22 @@ Bangle.on('tap',function(data){
     if(data.dir == "front"){
       counter ++;
       drawCounter(110,126,50,66);
-      pressKey(26);  //send W
-      if(data.double == true){
-        counter = 0;
-       }
-    }
-    else if(data.dir == "right"){
-      checkHID();
+        if(data.double == true){
+          pen();
+         }
     }
     else if(data.dir == "left"){
+      checkHID();
+    }
+    else if(data.dir == "right"){
       altTab();
     }
-    
+    else if(data.dir == "top"){
+      pressKey(26,0);
+    }
+    else if(data.dir == "bottom"){
+     counter = 0;
+    }
   }
 });
 
@@ -317,20 +321,29 @@ int.clickButton(int.BUTTON.LEFT);
 };  //can be added CTRL + SHIFT
 */
 
-function sendKey(keyVal){
+/*function sendKey(keyVal){
   int.tapKey(int.KEY.keyVal, 0);
-}
+}*/
 
 function altTab(){
- int.tapKey(int.KEY.40,int.MODIFY.SHIFT+int.MODIFY.CTRL);            
+ //int.tapKey(int.KEY.T,int.MODIFY.ALT);
+  NRF.sendHIDReport([2,0x04,0,43,0,0,0,0], function() {
+    NRF.sendHIDReport([2,0,0,0,0,0,0,0], function() {
+      if (callback) callback();
+    });
+  });
+}
+
+function pen(){
+int.tapKey(int.KEY.P,int.MODIFY.CTRL);
 }
 
 // from presenter app
 function pressKey(keyCode, modifiers, callback) {
   if (!HIDenabled) return;
   if (!modifiers) modifiers = 0;
-  NRF.sendHIDReport([modifiers,0,keyCode,0,0,0,0,0], function() {
-    NRF.sendHIDReport([0,0,0,0,0,0,0,0], function() {
+  NRF.sendHIDReport([2,modifiers,0,keyCode,0,0,0,0], function() {
+    NRF.sendHIDReport([2,0,0,0,0,0,0,0], function() {
       if (callback) callback();
     });
   });
@@ -354,7 +367,6 @@ function clickMouse(b, callback) {
     if (callback) callback();
   });
 }
-
 function scroll(wheel,hwheel,callback) {
   moveMouse(0,0,0,wheel,hwheel,callback);
 }
