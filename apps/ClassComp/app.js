@@ -222,7 +222,7 @@ Bangle.on('tap',function(data){
     if(data.dir == "front"){
       counter ++;
       drawCounter(110,126,50,66);
-      //sendKey("W");
+      pressKey(26);  //send W
       if(data.double == true){
         counter = 0;
        }
