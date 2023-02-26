@@ -230,6 +230,9 @@ Bangle.on('tap',function(data){
     else if(data.dir == "right"){
       checkHID();
     }
+    else if(data.dir == "left"){
+      altTab();
+    }
     
   }
 });
@@ -253,7 +256,10 @@ function drawDate(x,y,h,w){
 }
 const storage = require('Storage');
 const settings = storage.readJSON('setting.json',1) || { HID: false };
-const kb = require("ble_hid_keyboard");
+//const kb = require("ble_hid_combo");
+
+var int = require("ble_hid_combo");
+  NRF.setServices(undefined, { hid : int.report });
 
 function checkHID(){
   g.clear();
@@ -287,7 +293,57 @@ if (settings.HID === "com") {
 
 let HIDenabled = true;
 
-NRF.setServices(undefined, { hid : kb.report });
+//from tutorial
+/*
+int.tapKey(int.KEY.A);
+int.tapKey(int.KEY.A, int.MODIFY.SHIFT);
+int.clickButton(int.BUTTON.LEFT);
+// Scroll vertically and horizontally:
+  int.scroll(10, -20);
+  
+ exports.MODIFY = {
+  CTRL        : 0x01,
+  SHIFT       : 0x02,
+  ALT         : 0x04,
+  GUI         : 0x08,
+  LEFT_CTRL   : 0x01,
+  LEFT_SHIFT  : 0x02,
+  LEFT_ALT    : 0x04,
+  LEFT_GUI    : 0x08,
+  RIGHT_CTRL  : 0x10,
+  RIGHT_SHIFT : 0x20,
+  RIGHT_ALT   : 0x40,
+  RIGHT_GUI   : 0x80
+};  //can be added CTRL + SHIFT
+*/
+
+function sendKey(keyVal){
+  int.tapKey(int.KEY.keyVal, 0);
+}
+
+function altTab(){
+ int.tapKey(int.KEY.40,int.MODIFY.SHIFT+int.MODIFY.CTRL);            
+}
+
+// from presenter app
+function pressKey(keyCode, modifiers, callback) {
+  if (!HIDenabled) return;
+  if (!modifiers) modifiers = 0;
+  NRF.sendHIDReport([modifiers,0,keyCode,0,0,0,0,0], function() {
+    NRF.sendHIDReport([0,0,0,0,0,0,0,0], function() {
+      if (callback) callback();
+    });
+  });
+}
+function clickMouse(b, callback) {
+  if (!HIDenabled) return;
+  NRF.sendHIDReport([1,b,0,0,0,0,0,0], function() {
+      NRF.sendHIDReport([1,0,0,0,0,0,0,0], function() {
+      if (callback) callback();
+    });
+  });
+}
+//NRF.setServices(undefined, { hid : kb.report });
 
 /*function moveMouse(x,y,b,wheel,hwheel,callback) {
   if (!HIDenabled) return;
@@ -303,30 +359,6 @@ function scroll(wheel,hwheel,callback) {
   moveMouse(0,0,0,wheel,hwheel,callback);
 }
 */
-
-function clickMouse(b, callback) {
-  if (!HIDenabled) return;
-  NRF.sendHIDReport([1,b,0,0,0,0,0,0], function() {
-      NRF.sendHIDReport([1,0,0,0,0,0,0,0], function() {
-      if (callback) callback();
-    });
-  });
-}
-
-function sendKey(keyVal){
-  kb.tap(kb.KEY.keyVal, 0);
-}
-
-
-function pressKey(keyCode, modifiers, callback) {
-  if (!HIDenabled) return;
-  if (!modifiers) modifiers = 0;
-  NRF.sendHIDReport([2, modifiers,0,keyCode,0,0,0,0], function() {
-    NRF.sendHIDReport([2,0,0,0,0,0,0,0], function() {
-      if (callback) callback();
-    });
-  });
-}
 
 
 Bangle.setUI("clock");
