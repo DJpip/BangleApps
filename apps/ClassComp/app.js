@@ -237,6 +237,7 @@ Bangle.on('tap',function(data){
     }
     else if(data.dir == "bottom"){
      counter = 0;
+      drawCounter(110,126,50,66);
     }
   }
 });
