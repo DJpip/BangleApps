@@ -11,6 +11,26 @@ const lessonTimes = [  //[start hour, start minute, length]
   [15,40,50],//L9
 ];
 
+
+function Create2DArray(rows,columns) {
+  timeInt = Array(rows);
+  for (var i = 0; i < rows; i++) {
+      timeInt[i] = Array(columns);
+  }
+}
+
+function LTInt(arr){
+ Create2DArray(maxLessons,5);
+ for(var i = 0; i<arr.length; i++){
+   timeInt[i][0] = arr[i][0]*60+arr[i][1]; //lesson start
+   timeInt[i][1] = arr[i][0]*60+arr[i][1]+arr[i][2]; //lesson end
+   timeInt[i][2] = arr[i][0]*60+arr[i][1]+(arr[i][2]/2); //lesson midpoint
+   timeInt[i][3] = arr[i][0]*60+arr[i][1]+arr[i][2]-15; //lesson 15 mins warning
+   timeInt[i][4] = arr[i][0]*60+arr[i][1]+arr[i][2]-5; //lesson 5 mins warning
+ }
+ //print(timeInt);
+}
+
 const days = [
   "Sun",
   "Mon",
@@ -22,9 +42,7 @@ const days = [
 ];
 
 //Variables. Declare and set on load.
-  var Period = 0;
-  var lastPeriod = 0;
-  const f1 = 1E3;  //of getTime updates
+   const f1 = 1E3;  //of getTime updates
   const f2 = 1E4;  //of timelUpdates
   var t = new Date();
   var d = t.getDay();
@@ -39,22 +57,29 @@ const days = [
   var time;
   var timeM;
   let timeInt = [[],[]]; //see below
-  var loadRun = true;
-  var maxLessons = lessonTimes.length;
+
   var waiting = false;
+  var loadRun = true;
+
+  var Period = 0;
+  var lastPeriod = 0;
+  var maxLessons = lessonTimes.length;
+ 
   var counter = 0;
+  var faceUpVar = false;
+  var tap1 = false;
 
 //TimeInt is array of [start time as int, end time as int, mid time as int, 3/4 //time as int, 5 mins remaining as int]
 
 
-function getTime(){ //every f1 seconds
+function getTime(){ //every f1 seconds, gets the time and draws the seconds. runs the loadRun first time
   
   t = Date(); 
   h = t.getHours(); 
   m = t.getMinutes(); 
   s = t.getSeconds();
   time = ("0" + h).substr(-2) + ":" + ("0" + m).substr(-2);// + ":" + ("0" + s).substr(-2);
-  drawSeconds(138,85,25,30);
+  if(!isWeekend){drawSeconds(138,85,25,30);}
   
 if(loadRun ==true){ //run once
     loadRun = false;
@@ -69,7 +94,7 @@ if(loadRun ==true){ //run once
   
 }
 
-function timelyUpdates(){ //every f2 seconds
+function timelyUpdates(){ //every f2 seconds updates the lesson and clock
   timeM = h*60 + m;
   
 if(m !== lastM){ //check every new minute
@@ -84,13 +109,6 @@ Bangle.on('midnight', function() { //updates the day on midnight
     drawDate(5,85,25,70);
 });
 
-function checkWeekend(){
-  if(d == 6 || d == 0){
-    isWeekend = true;
-  }
-  else{ isWeekend = false;}
-}
-
 function checkDate(){
   d = t.getDay();
   day = days[d];
@@ -99,23 +117,11 @@ function checkDate(){
   checkWeekend();
 }
 
-function Create2DArray(rows,columns) {
-   timeInt = Array(rows);
-   for (var i = 0; i < rows; i++) {
-       timeInt[i] = Array(columns);
-   }
-}
-
-function LTInt(arr){
-  Create2DArray(maxLessons,5);
-  for(var i = 0; i<arr.length; i++){
-    timeInt[i][0] = arr[i][0]*60+arr[i][1]; //lesson start
-    timeInt[i][1] = arr[i][0]*60+arr[i][1]+arr[i][2]; //lesson end
-    timeInt[i][2] = arr[i][0]*60+arr[i][1]+(arr[i][2]/2); //lesson midpoint
-    timeInt[i][3] = arr[i][0]*60+arr[i][1]+arr[i][2]-15; //lesson 15 mins warning
-    timeInt[i][4] = arr[i][0]*60+arr[i][1]+arr[i][2]-5; //lesson 5 mins warning
+function checkWeekend(){
+  if(d == 6 || d == 0){
+    isWeekend = true;
   }
-  //print(timeInt);
+  else{ isWeekend = false;}
 }
 
 function lessonUpdate(){
@@ -133,11 +139,10 @@ function checkPeriod(){
     }
   }
   if(lastPeriod != Period){ //buzz and update screen with period when changing period
-            Bangle.buzz(100);
+            Bangle.buzz(600);
             drawPeriod();
             lastPeriod = Period;
           }
-  print(Period);
 }
 
 function buzzRepeat(x,y,z){ //buzz x number of times, for y long with z millis of interval. 
@@ -185,10 +190,9 @@ function drawPeriod(){
   g.clearRect(25,0,100,30);
   g.setFont("Vector",30);
   g.setColor("#FFFF00");
-  if(Period == 0){
-    //g.drawString("Break",25,0);
-  }
-  else {g.drawString(day + " P" + Period,25,0);}
+  if(isWeekend){g.drawString(day,25,0);}
+  else if(Period == 0){g.drawString(day,25,0);}
+  else{g.drawString(day + " P" + Period,25,0);}
 }
 
 function drawSeconds(x,y,h,w){
@@ -200,6 +204,7 @@ function drawSeconds(x,y,h,w){
 }
 
 function drawCounter(x,y,h,w){
+  Bangle.buzz(100,0.5);
   g.clearRect(x,y,x+w,y+h);
   if(counter>0){
     g.setColor("#FF8F8F");//off red
@@ -208,15 +213,29 @@ function drawCounter(x,y,h,w){
   }
 }
 
-Bangle.on('tap',function(data){
-  if(data.dir == "front"){
-    counter ++;
-    if(data.double == true){
-     counter = 0;
-     }
-  }
-    drawCounter(110,126,50,66);
+Bangle.on('faceUp',function(Up){
+  faceUpVar = Up;
 });
+
+Bangle.on('tap',function(data){
+  if(faceUpVar){
+    if(data.dir == "front"){
+      counter ++;
+      drawCounter(110,126,50,66);
+      //sendKey("W");
+      if(data.double == true){
+        counter = 0;
+       }
+    }
+    else if(data.dir == "right"){
+      checkHID();
+    }
+    
+  }
+});
+
+Bangle.setOptions({gestureInactiveCount:4}); //default 4 samples before looking again. poll interval is 80ms after waking up.
+Bangle.setOptions({gestureMinLength:10}); //default 10 samples long
 
 function drawTime(){
   g.clearRect(0,31,240,85);
@@ -232,6 +251,83 @@ function drawDate(x,y,h,w){
   g.setFont("Vector",h);
   g.drawString( date + "/" + month,x,y);
 }
+const storage = require('Storage');
+const settings = storage.readJSON('setting.json',1) || { HID: false };
+const kb = require("ble_hid_keyboard");
+
+function checkHID(){
+  g.clear();
+if (settings.HID === "com") {
+  E.showPrompt("Disable HID?",{title:"HID enabled"}).then(function(disable) {
+    if (disable) {
+      settings.HID = false;
+      HIDenabled = false;
+      storage.write('setting.json', settings);
+      setTimeout(load, 1000, "ClassComp.app.js");
+    } else {
+      setTimeout(load, 1000);
+    }
+  });
+}
+  //drawApp();
+  //setInterval(update, 100); // 10 Hz
+ else {
+  E.showPrompt("Enable KB HID?",{title:"HID disabled"}).then(function(enable) {
+    if (enable) {
+      settings.HID = "com";
+      HIDenabled = true;
+      storage.write('setting.json', settings);
+      setTimeout(load, 1000, "ClassComp.app.js");
+    } else {
+      setTimeout(load, 1000);
+    }
+  });
+}
+}
+
+let HIDenabled = true;
+
+NRF.setServices(undefined, { hid : kb.report });
+
+/*function moveMouse(x,y,b,wheel,hwheel,callback) {
+  if (!HIDenabled) return;
+  if (!b) b = 0;
+  if (!wheel) wheel = 0;
+  if (!hwheel) hwheel = 0;
+  NRF.sendHIDReport([1,b,x,y,wheel,hwheel,0,0], function() {
+    if (callback) callback();
+  });
+}
+
+function scroll(wheel,hwheel,callback) {
+  moveMouse(0,0,0,wheel,hwheel,callback);
+}
+*/
+
+function clickMouse(b, callback) {
+  if (!HIDenabled) return;
+  NRF.sendHIDReport([1,b,0,0,0,0,0,0], function() {
+      NRF.sendHIDReport([1,0,0,0,0,0,0,0], function() {
+      if (callback) callback();
+    });
+  });
+}
+
+function sendKey(keyVal){
+  kb.tap(kb.KEY.keyVal, 0);
+}
+
+
+function pressKey(keyCode, modifiers, callback) {
+  if (!HIDenabled) return;
+  if (!modifiers) modifiers = 0;
+  NRF.sendHIDReport([2, modifiers,0,keyCode,0,0,0,0], function() {
+    NRF.sendHIDReport([2,0,0,0,0,0,0,0], function() {
+      if (callback) callback();
+    });
+  });
+}
+
 
 Bangle.setUI("clock");
 Bangle.loadWidgets();
