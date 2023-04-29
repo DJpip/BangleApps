@@ -42,8 +42,7 @@ const days = [
 ];
 
 //Variables. Declare and set on load.
-   const f1 = 1E3;  //of getTime updates
-  const f2 = 1E4;  //of timelUpdates
+  const f1 = 1E3;  //of getTime updates
   var t = new Date();
   var d = t.getDay();
   var day = days[d];
@@ -68,8 +67,20 @@ const days = [
   var counter = 0;
   var faceUpVar = false;
   var tap1 = false;
-
 //TimeInt is array of [start time as int, end time as int, mid time as int, 3/4 //time as int, 5 mins remaining as int]
+
+//Load run here
+function load(){
+g.clear();
+    timeM = h*60 + m;
+    checkDate(); drawDate(5,85,25,70);//checks date and draws it. checks for weekends too.
+    LTInt(lessonTimes); //converts lessonTimes to useable minute array
+    lessonUpdate(); //checks if lesson has changed, and if it needs to buzz
+    Bangle.drawWidgets(); drawPeriod(); //draws the period top left
+    drawTime();
+}
+
+load();
 
 
 function getTime(){ //every f1 seconds, gets the time and draws the seconds. runs the loadRun first time
@@ -79,30 +90,24 @@ function getTime(){ //every f1 seconds, gets the time and draws the seconds. run
   m = t.getMinutes(); 
   s = t.getSeconds();
   time = ("0" + h).substr(-2) + ":" + ("0" + m).substr(-2);// + ":" + ("0" + s).substr(-2);
-  if(!isWeekend){drawSeconds(138,85,25,30);}
-  
-if(loadRun ==true){ //run once
-    loadRun = false;
-    g.clear();
-    timeM = h*60 + m;
-    checkDate(); drawDate(5,85,25,70);//checks date and draws it. checks for weekends too.
-    LTInt(lessonTimes); //converts lessonTimes to useable minute array
-    lessonUpdate(); //checks if lesson has changed, and if it needs to buzz
-    Bangle.drawWidgets(); drawPeriod(); //draws the period top left
-    drawTime();
-  }
+  drawSeconds(138,85,25,30);
   
 }
 
-function timelyUpdates(){ //every f2 seconds updates the lesson and clock
-  timeM = h*60 + m;
-  
-if(m !== lastM){ //check every new minute
+function drawSeconds(x,y,h,w){
+  if(!isweekend){
+  g.clearRect(x,y,x+w,y+h);
+  g.setColor(-1);
+  g.setFont("Vector",h);
+  g.drawString(("0" + s).substr(-2),x,y);
+  }
+  if(m !== lastM){ //check every new minute and update the lesson number and buzz if required
     lastM = m;
     lessonUpdate();
   }
-
+  if(s==0){drawTime();}
 }
+
 
 Bangle.on('midnight', function() { //updates the day on midnight
     checkDate();
@@ -195,13 +200,7 @@ function drawPeriod(){
   else{g.drawString(day + " P" + Period,25,0);}
 }
 
-function drawSeconds(x,y,h,w){
-  g.clearRect(x,y,x+w,y+h);
-  g.setColor(-1);
-  g.setFont("Vector",h);
-  g.drawString(("0" + s).substr(-2),x,y);
-  if(s==0){drawTime();}
-}
+
 
 function drawCounter(x,y,h,w){
   Bangle.buzz(100,0.5);
@@ -380,5 +379,4 @@ Bangle.drawWidgets(); drawPeriod();
 Bangle.on('lock', function(on) { drawPeriod();});
 
 setInterval(getTime,f1);
-setInterval(timelyUpdates,f2);
 getTime(); timelyUpdates();
