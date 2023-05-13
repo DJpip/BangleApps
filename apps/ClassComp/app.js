@@ -95,7 +95,7 @@ function getTime(){ //every f1 seconds, gets the time and draws the seconds. run
 }
 
 function drawSeconds(x,y,h,w){
-  if(!isweekend){
+  if(!isWeekend){
   g.clearRect(x,y,x+w,y+h);
   g.setColor(-1);
   g.setFont("Vector",h);
@@ -212,7 +212,7 @@ function drawCounter(x,y,h,w){
   }
 }
 
-Bangle.on('faceUp',function(Up){
+/*Bangle.on('faceUp',function(Up){
   faceUpVar = Up;
 });
 
@@ -240,7 +240,7 @@ Bangle.on('tap',function(data){
     }
   }
 });
-
+*/
 Bangle.setOptions({gestureInactiveCount:4}); //default 4 samples before looking again. poll interval is 80ms after waking up.
 Bangle.setOptions({gestureMinLength:10}); //default 10 samples long
 
@@ -379,4 +379,4 @@ Bangle.drawWidgets(); drawPeriod();
 Bangle.on('lock', function(on) { drawPeriod();});
 
 setInterval(getTime,f1);
-getTime(); timelyUpdates();
+getTime(); //timelyUpdates();
