@@ -77,10 +77,8 @@ g.clear();
     LTInt(lessonTimes); //converts lessonTimes to useable minute array
     lessonUpdate(); //checks if lesson has changed, and if it needs to buzz
     Bangle.drawWidgets(); drawPeriod(); //draws the period top left
-    drawTime();
+    getTime(); drawTime();
 }
-
-load();
 
 
 function getTime(){ //every f1 seconds, gets the time and draws the seconds. runs the loadRun first time
@@ -116,7 +114,7 @@ Bangle.on('midnight', function() { //updates the day on midnight
 
 function checkDate(){
   d = t.getDay();
-  day = days[d];
+  day = dow(t,1);
   date = t.getDate();
   month = t.getMonth() + 1;
   checkWeekend();
@@ -372,7 +370,7 @@ function scroll(wheel,hwheel,callback) {
 }
 */
 
-
+load();
 Bangle.setUI("clock");
 Bangle.loadWidgets();
 Bangle.drawWidgets(); drawPeriod();
