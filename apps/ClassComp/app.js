@@ -289,10 +289,11 @@ function clickMouse(b, callback) {
 }
 
 
-load();
+//load();
 Bangle.setUI("clock");
 Bangle.loadWidgets();
-Bangle.drawWidgets(); //drawPeriod();
+load();
+//Bangle.drawWidgets(); //drawPeriod();
 Bangle.on('lock', function(on) { drawPeriod();});
 
 setInterval(getTime,f1);
