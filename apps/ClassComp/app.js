@@ -61,7 +61,7 @@ function LTInt(arr){
 
 
 //Load run here
-function load(){
+function init(){
 g.clear();
     timeM = h*60 + m;
     checkDate(); drawDate(5,85,25,70);//checks date and draws it. checks for weekends too.
@@ -292,7 +292,7 @@ function clickMouse(b, callback) {
 //load();
 Bangle.setUI("clock");
 Bangle.loadWidgets();
-load();
+init();
 //Bangle.drawWidgets(); //drawPeriod();
 Bangle.on('lock', function(on) { drawPeriod();});
 
