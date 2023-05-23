@@ -90,7 +90,7 @@ function getTime(){ //every f1 seconds, gets the time and draws the seconds.
 }
 
 function drawSeconds(x,y,h,w){
-  if(!isWeekend && !isNight){
+  if(!(isWeekend || isNight){
   g.clearRect(x,y,x+w,y+h);
   g.setColor(-1);
   g.setFont("Vector",h);
@@ -123,9 +123,9 @@ function drawPeriod(){
   g.clearRect(25,0,100,30);
   g.setFont("Vector",30);
   g.setColor("#FFFF00");
-  if(isWeekend){g.drawString(day,25,0);}
-  else if(Period == 0){g.drawString(day,25,0);}
-  else{g.drawString(day + " P" + Period,25,0);}
+  if(isWeekend){g.drawString(day,25,0);
+  }else if(Period == 0){g.drawString(day,25,0);
+  }else{g.drawString(day + " P" + Period,25,0);}
 }
 
 function drawDate(x,y,h,w){
