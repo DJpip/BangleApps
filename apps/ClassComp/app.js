@@ -11,7 +11,6 @@ const lessonTimes = [  //[start hour, start minute, length]
   [15,40,50],//L9
 ];
 
-
 function Create2DArray(rows,columns) {
   timeInt = Array(rows);
   for (var i = 0; i < rows; i++) {
@@ -59,7 +58,6 @@ function LTInt(arr){
  // var faceUpVar = false;
  // var tap1 = false;
 
-
 //Load run here
 function init(){
 g.clear();
@@ -76,7 +74,6 @@ g.clear();
     else{ isNight = true;}
 }
 
-
 function getTime(){ //every f1 seconds, gets the time and draws the seconds.
   
   t = Date(); 
@@ -86,7 +83,6 @@ function getTime(){ //every f1 seconds, gets the time and draws the seconds.
  // time = ("0" + h).substr(-2) + ":" + ("0" + m).substr(-2);
   time = require("locale").time(t, 1);
   drawSeconds(138,85,25,30);
-  
 }
 
 function drawSeconds(x,y,h,w){
@@ -103,10 +99,12 @@ function drawSeconds(x,y,h,w){
   }
   if(m == 0){
     //check if it is night and we need to draw seconds 
-    if(h >=  morningStart && h <= dayEnd){
+    if(h <  morningStart || h > dayEnd){
+      isNight = true;
+      g.clearRect(138,85,168,110);
+    } else { 
       isNight = false;
-    }
-    else{ isNight = true;}
+      }
   }
 }
 
@@ -188,7 +186,6 @@ function buzzRepeat(x,y,z){ //buzz x number of times, for y long with z millis o
 function checkbuzz(){
 if(!waiting){ //don't buzz more than once in a minute
   
-
   if(timeInt[Period][2] == timeM){ //half way through lesson
    buzzRepeat(2,100,700);
        waiting = true;
@@ -215,7 +212,6 @@ if(!waiting){ //don't buzz more than once in a minute
 
 } 
 }
-
 
 const storage = require('Storage');
 const settings = storage.readJSON('setting.json',1) || { HID: false };
@@ -255,7 +251,6 @@ if (settings.HID === "com") {
 
 let HIDenabled = true;
 
-
 function altTab(){
  //int.tapKey(int.KEY.T,int.MODIFY.ALT);
   NRF.sendHIDReport([2,0x04,0,43,0,0,0,0], function() {
@@ -288,7 +283,6 @@ function clickMouse(b, callback) {
   });
 }
 
-
 //load();
 Bangle.setUI("clock");
 Bangle.loadWidgets();
@@ -297,4 +291,3 @@ init();
 Bangle.on('lock', function(on) { drawPeriod();});
 
 setInterval(getTime,f1);
-
