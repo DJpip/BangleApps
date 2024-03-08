@@ -157,8 +157,8 @@ g.drawString( date + "/" + month,5,85);
     g.drawString(("0" + s).substr(-2),138, 85);
   }
 
-    
-queuer(drawTimeout,1000,draw);
+   minuteUpdater(); 
+//queuer(drawTimeout,1000,draw);
 };
 
 Bangle.on('accel', function(a){
@@ -210,12 +210,13 @@ let init = function(){
   minuteUpdater(); //keeps minute-time sensitive actions updated
   checkWeekday(); //checks if it is a weekday and updates the variable
   checkLesson();  //checks what lesson it is
+  draw();
 };
 
 //things to check or do every minute
 let minuteUpdater = function(){
   calctimeM();
   checkLesson();
-  
+   draw ();
   queuer(minuteTimeout,60000,minuteUpdater); //must be the final call if want minuteUpdater to be called again
   };
