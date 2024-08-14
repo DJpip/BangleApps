@@ -6,7 +6,7 @@ const lessonTimes = [  //[start hour, start minute, length]
   [11,30,50],//L4
   [12,20,50],//L5
   [13,10,50],//L6
-  [14,00,50],//L7
+  [14,0o0,50],//L7
   [14,50,50],//L8
   [15,40,50],//L9
 ];
@@ -86,7 +86,7 @@ function getTime(){ //every f1 seconds, gets the time and draws the seconds.
 }
 
 function drawSeconds(x,y,h,w){
-  if(!(isWeekend || isNight){
+  if(!(isWeekend || isNight)){
   g.clearRect(x,y,x+w,y+h);
   g.setColor(-1);
   g.setFont("Vector",h);
