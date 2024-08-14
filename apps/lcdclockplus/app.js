@@ -33,17 +33,22 @@ function sendCommand(command) {
 }
 
 function togglePlay() {
-  sendCommand(stat==="play" ? "pause" : "play");
+  //sendCommand(stat==="play" ? "pause" : "play");
   if(stat==="play"){
+    sendCommand("pause");
     stat = "pause";
   }
-  if(stat==="pause"){
+  else{
+    sendCommand("play");
     stat = "play";
   }
 }
 
 Bangle.on("tap", function(data){
-  if(data.dir === "front"){togglePlay();}}
+  if(data.dir === "front"){
+    if(data.double === true){
+        togglePlay();}}
+  }
 );
 
 // Actually draw the watch face
