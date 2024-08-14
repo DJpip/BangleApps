@@ -10,6 +10,34 @@ let drawTimeout;
 require("Font7x11Numeric7Seg").add(Graphics);
 const is12Hour = (require("Storage").readJSON("setting.json", 1) || {})["12hour"];
 
+//Music Control
+let stat = "";
+
+let tCommand = {};
+/**
+ * Send command and highlight corresponding control
+ * @param {string} command - "play"/"pause"/"next"/"previous"/"volumeup"/"volumedown"
+ */
+function sendCommand(command) {
+  Bluetooth.println("");
+  Bluetooth.println(JSON.stringify({t: "music", n: command}));
+  // for control color
+  if (command in tCommand) {
+    clearTimeout(tCommand[command]);
+  }
+  tCommand[command] = setTimeout(function() {
+    delete tCommand[command];
+    draw();
+  }, 200);
+  draw();
+}
+
+function togglePlay() {
+  sendCommand(stat==="play" ? "pause" : "play");
+}
+
+Bangle.on("touch", togglePlay);
+
 // Actually draw the watch face
 let draw = function() {
   var x = R.x + R.w/2;
