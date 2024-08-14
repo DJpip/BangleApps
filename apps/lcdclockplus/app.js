@@ -11,7 +11,7 @@ require("Font7x11Numeric7Seg").add(Graphics);
 const is12Hour = (require("Storage").readJSON("setting.json", 1) || {})["12hour"];
 
 //Music Control
-let stat = "";
+let stat = "pause";
 
 let tCommand = {};
 /**
@@ -34,9 +34,17 @@ function sendCommand(command) {
 
 function togglePlay() {
   sendCommand(stat==="play" ? "pause" : "play");
+  if(stat==="play"){
+    stat = "pause";
+  }
+  if(stat==="pause"){
+    stat = "play";
+  }
 }
 
-Bangle.on("touch", togglePlay);
+Bangle.on("tap", function(data){
+  if(data.dir === "front"){togglePlay();}}
+);
 
 // Actually draw the watch face
 let draw = function() {
