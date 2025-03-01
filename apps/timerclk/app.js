@@ -165,6 +165,7 @@ if (process.env.HWVERSION==1) {
         }
       } else if (lastY > 5) { // down
       } else if (lastY < -5) { // up
+        load("timerclk.light.js");
       }
       lastX = 0;
       lastY = 0;

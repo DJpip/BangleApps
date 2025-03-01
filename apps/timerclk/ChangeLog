@@ -5,3 +5,4 @@
 0.05: Improve responsiveness and detection of swipes on main clock screen
 0.06: Minor code improvements
 0.07: Fix regression in 0.06
+0.08: DJ update to speed up selecting minutes/seconds.
