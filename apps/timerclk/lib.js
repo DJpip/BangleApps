@@ -90,41 +90,37 @@ exports.registerControls = function(o) {
     var absX, lastX=0, lastY=0;
     Bangle.on('drag', e=>{
       if (!e.b) {
-      if (lastX > 40) { // right
-        o.current++;
-        if (o.current == o.all.length) o.all.push(o.defaultElement.clone());
-      } else if (lastX < -40) { // left
-        if (o.current > 0) {
-        o.current--;
+        if (lastX > 40) { // right
+          o.current++;
+          if (o.current == o.all.length) o.all.push(o.defaultElement.clone());
+        } else if (lastX < -40) { // left
+          if (o.current > 0) {
+            o.current--;
+          }
+        } else if (lastY > 30) { // down
+          if (absX < o.dragBorderHrsMins) {
+            o.edit(3, -1);
+          } else if (absX > o.dragBorderHrsMins && absX < o.dragBorderMinsSecs) {
+            o.edit(2, -1);
+          } else {
+            o.edit(1, -1);
+          }
+        } else if (lastY < -30) { // up
+          if (absX < o.dragBorderHrsMins) {
+            o.edit(3, 1);
+          } else if (absX > o.dragBorderHrsMins && absX < o.dragBorderMinsSecs) {
+            o.edit(2, 1);
+          } else {
+            o.edit(1, 1);
+          }
         }
-      } else if (lastY > 30) { // down
-        let speed = Math.abs(lastY) / e.time;
-        let change = Math.ceil(speed);
-        if (absX < o.dragBorderHrsMins) {
-        o.edit(3, -change);
-        } else if (absX > o.dragBorderHrsMins && absX < o.dragBorderMinsSecs) {
-        o.edit(2, -change);
-        } else {
-        o.edit(1, -change);
-        }
-      } else if (lastY < -30) { // up
-        let speed = Math.abs(lastY) / e.time;
-        let change = Math.ceil(speed);
-        if (absX < o.dragBorderHrsMins) {
-        o.edit(3, change);
-        } else if (absX > o.dragBorderHrsMins && absX < o.dragBorderMinsSecs) {
-        o.edit(2, change);
-        } else {
-        o.edit(1, change);
-        }
-      }
-      lastX = 0;
-      lastY = 0;
-      o.update();
+        lastX = 0;
+        lastY = 0;
+        o.update();
       } else {
-      absX = e.x;
-      lastX = lastX + e.dx;
-      lastY = lastY + e.dy;
+        absX = e.x;
+        lastX = lastX + e.dx;
+        lastY = lastY + e.dy;
       }
     });
   }
