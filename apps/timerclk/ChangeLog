@@ -6,3 +6,4 @@
 0.06: Minor code improvements
 0.07: Fix regression in 0.06
 0.08: DJ update to speed up selecting minutes/seconds.
+0.09: Added support for bible verses hourly

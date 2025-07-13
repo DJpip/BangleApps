@@ -15,9 +15,14 @@ function loadLocation() {
 }
 
 function updateSunRiseSunSet(location) {
-  var times = SunCalc.getTimes(new Date(), location.lat, location.lon);
-  sunRise = require("locale").time(times.sunrise, 1);
-  sunSet = require("locale").time(times.sunset, 1);
+  if (typeof SunCalc !== "undefined" && SunCalc.getTimes) {
+    var times = SunCalc.getTimes(new Date(), location.lat, location.lon);
+    sunRise = require("locale").time(times.sunrise, 1);
+    sunSet = require("locale").time(times.sunset, 1);
+  } else {
+    sunRise = "--:--";
+    sunSet = "--:--";
+  }
 }
 
 var timerclk = require("timerclk.lib.js");
@@ -100,9 +105,7 @@ function drawSpecial() {
 var drawCount=0;
 
 function draw() {
-  if (drawCount++ % 60 == 0) {
-    updateSunRiseSunSet(location);
-  }
+
   var x = g.getWidth()/2;
   var y = g.getHeight()/2;
   g.reset();
@@ -110,6 +113,17 @@ function draw() {
   var timeStr = require("locale").time(date,1);
   var dateStr = require("locale").date(date,settings.shortDate).toUpperCase();
   var dowStr = require("locale").dow(date).toUpperCase();
+
+   if (drawCount++ % 60 == 0) { //called every hour
+    updateSunRiseSunSet(location);
+    
+    //between hours of 8am and 8pm only
+    if (date.getHours() >= 8 && date.getHours() < 20){
+      loadRandomPassage();
+      Bangle.buzz(200); 
+    }
+  }
+
   var srssStr = sunRise + sunIcons + sunSet;
 
   // draw time
@@ -165,7 +179,7 @@ if (process.env.HWVERSION==1) {
         }
       } else if (lastY > 5) { // down
       } else if (lastY < -5) { // up
-        load("timerclk.light.js");
+        //load("timerclk.light.js"); //experimental feature
       }
       lastX = 0;
       lastY = 0;
@@ -176,6 +190,61 @@ if (process.env.HWVERSION==1) {
     }
   });
 }
+
+//randomly load a passage from the Bible every hour
+function loadRandomPassage() {
+  var passages = require("Storage").readJSON("timerclk.passages.json", true);
+  if (passages && passages.passages && passages.passages.length) {
+    var passage = passages.passages[Math.floor(Math.random() * passages.passages.length)];
+    if (passage && passage.verses) {
+      var verse = passage.verses[Math.floor(Math.random() * passage.verses.length)];
+      if (verse && verse.text) {
+        // Try font size 2 first
+        g.setFont("6x8", 2).setFontAlign(0,0);
+        var maxWidth = Bangle.appRect.x2 - Bangle.appRect.x - 2;
+        var wrappedText = g.wrapString(verse.text, maxWidth);
+        var lineHeight = g.getFontHeight();
+        var totalTextHeight = wrappedText.length * lineHeight;
+
+        // If text won't fit, use font size 1
+        if (totalTextHeight > (Bangle.appRect.y2 - Bangle.appRect.y)) {
+          g.setFont("6x8", 1);
+          wrappedText = g.wrapString(verse.text, maxWidth);
+          lineHeight = g.getFontHeight();
+          totalTextHeight = wrappedText.length * lineHeight;
+        }
+        g.setFontAlign(0,0);
+        g.clearRect(Bangle.appRect.x, Bangle.appRect.y, Bangle.appRect.x2, Bangle.appRect.y2);
+        var reference = verse.number + " " + passage.book + " " + passage.chapter;
+        
+        // Calculate starting Y position to center the text vertically, maximum at the top of the appRect
+        var startY = Math.max(Bangle.appRect.y, g.getHeight()/2 - totalTextHeight/2);
+        
+        // Draw each line of wrapped text
+        for (var i = 0; i < wrappedText.length; i++) {
+          g.drawString(wrappedText[i], g.getWidth()/2, startY + (i * lineHeight));
+        }
+        
+        // Draw the reference below the verse
+        g.drawString(reference, g.getWidth()/2, startY + totalTextHeight + lineHeight);
+        
+        g.flip();
+        setTimeout(function() {
+          g.clearRect(Bangle.appRect.x, Bangle.appRect.y, Bangle.appRect.x2, Bangle.appRect.y2);
+          draw();
+        }, 5000);
+      }
+    }
+  }
+}     
+
+//show a random passage from the Bible when the screen is tapped
+Bangle.on('touch', function() {
+  loadRandomPassage();
+  Bangle.buzz(100);
+});
+
+
 
 Bangle.setUI("clock"); // Show launcher when middle button pressed
 g.clear();

@@ -90,6 +90,10 @@ exports.registerControls = function(o) {
     var absX, lastX=0, lastY=0;
     Bangle.on('drag', e=>{
       if (!e.b) {
+        // Calculate change amount based on drag distance (20 pixels per unit)
+        let changeAmt = Math.round(Math.abs(lastY) / 20);
+        if (changeAmt === 0) changeAmt = 1; // Ensure at least 1 unit change
+
         if (lastX > 40) { // right
           o.current++;
           if (o.current == o.all.length) o.all.push(o.defaultElement.clone());
@@ -99,19 +103,19 @@ exports.registerControls = function(o) {
           }
         } else if (lastY > 30) { // down
           if (absX < o.dragBorderHrsMins) {
-            o.edit(3, -1);
+            o.edit(3, -changeAmt);
           } else if (absX > o.dragBorderHrsMins && absX < o.dragBorderMinsSecs) {
-            o.edit(2, -1);
+            o.edit(2, -changeAmt);
           } else {
-            o.edit(1, -1);
+            o.edit(1, -changeAmt);
           }
         } else if (lastY < -30) { // up
           if (absX < o.dragBorderHrsMins) {
-            o.edit(3, 1);
+            o.edit(3, changeAmt);
           } else if (absX > o.dragBorderHrsMins && absX < o.dragBorderMinsSecs) {
-            o.edit(2, 1);
+            o.edit(2, changeAmt);
           } else {
-            o.edit(1, 1);
+            o.edit(1, changeAmt);
           }
         }
         lastX = 0;
